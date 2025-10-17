@@ -6,6 +6,11 @@ public class Animal {
     private int age;
     private boolean mammal;
 
+
+    public Animal() {
+    }
+
+
     public Animal(String family, String name, int age, boolean mammal) {
         this.family = family;
         this.name = name;
