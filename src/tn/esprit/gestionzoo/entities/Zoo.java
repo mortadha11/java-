@@ -1,14 +1,18 @@
 package tn.esprit.gestionzoo.entities;
 
+import tn.esprit.gestionzoo.exception.ZooFullException;
+import tn.esprit.gestionzoo.exception.InvalidAgeException;
+
 public class Zoo {
-    private static final int NBR_CAGES = 25;
+    private static final int NBR_CAGES = 3;
     private final Animal[] animals;
-    private final Aquatic[] aquaticAnimals; // ✅ nouveau tableau
+    private final Aquatic[] aquaticAnimals;
     private String name;
     private String city;
     private int count;
     private int aquaticCount;
 
+    // 🔸 Constructor
     public Zoo(String name, String city) {
         setName(name);
         this.city = city;
@@ -18,20 +22,33 @@ public class Zoo {
         this.aquaticCount = 0;
     }
 
+    // 🔸 Getters / Setters
     public String getName() { return name; }
+
     public void setName(String name) {
         this.name = (name == null || name.trim().isEmpty()) ? "DefaultZoo" : name;
     }
 
     public String getCity() { return city; }
+
     public void setCity(String city) { this.city = city; }
 
-    // === Animaux généraux ===
-    public boolean addAnimal(Animal animal) {
-        if (isZooFull() || searchAnimal(animal) != -1) return false;
+
+
+
+    public void addAnimal(Animal animal) throws ZooFullException, InvalidAgeException {
+        if (animal.getAge() < 0) {
+            throw new InvalidAgeException("Invalid age for animal: " + animal.getName());
+        }
+
+        if (isZooFull()) {
+            throw new ZooFullException("Zoo is full! Cannot add more animals.");
+        }
+
         animals[count++] = animal;
-        return true;
+        System.out.println(animal.getName() + " added successfully. Total animals: " + count);
     }
+
 
     public int searchAnimal(Animal animal) {
         for (int i = 0; i < count; i++) {
@@ -39,6 +56,7 @@ public class Zoo {
         }
         return -1;
     }
+
 
     public boolean removeAnimal(Animal animal) {
         int index = searchAnimal(animal);
@@ -48,9 +66,10 @@ public class Zoo {
         return true;
     }
 
+
     public boolean isZooFull() { return count >= NBR_CAGES; }
 
-    // === Aquatic management ===
+
     public void addAquaticAnimal(Aquatic aquatic) {
         if (aquaticCount < aquaticAnimals.length) {
             aquaticAnimals[aquaticCount++] = aquatic;
@@ -65,7 +84,7 @@ public class Zoo {
         }
     }
 
-    // ✅ Max penguin depth
+
     public float maxPenguinSwimmingDepth() {
         float max = 0;
         for (int i = 0; i < aquaticCount; i++) {
@@ -78,7 +97,7 @@ public class Zoo {
         return max;
     }
 
-    // ✅ Display number of each type
+
     public void displayNumberOfAquaticsByType() {
         int dolphins = 0, penguins = 0;
         for (int i = 0; i < aquaticCount; i++) {
@@ -97,5 +116,10 @@ public class Zoo {
 
     public static Zoo comparerZoo(Zoo z1, Zoo z2) {
         return (z1.count >= z2.count) ? z1 : z2;
+    }
+
+
+    public int getCount() {
+        return count;
     }
 }
