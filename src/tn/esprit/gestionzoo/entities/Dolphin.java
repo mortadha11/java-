@@ -1,6 +1,6 @@
 package tn.esprit.gestionzoo.entities;
 
-public class Dolphin extends tn.esprit.gestionzoo.entities.Aquatic {
+public class Dolphin extends Aquatic {
     private float swimmingSpeed;
 
     public Dolphin() {
